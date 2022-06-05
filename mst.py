@@ -161,9 +161,6 @@ def int_prog(adj):
     # - Has exactly v-1 edges
     model.con.add(expr=sum(model.x[i,j] for i in range(v) for j in range(i+1, v)) == v - 1)
 
-    for i in range(v):
-        model.con.add(expr=sum(model.x[i,j] for j in range(v)) - model.x[i,i] >= 1)
-
     # - Has no cycles
     # Or, equivalently, every subset S of vertices has no more than |S|-1 edges in it
     # (e.g. connect any three of {0,1,2,3} and try adding another edge without creating a cycle)
