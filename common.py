@@ -55,6 +55,14 @@ The graph (adj) is expected to be a float[][], and the minimum spanning
 tree (mst) a boolean[][].
 """
 def output_image(name, adj, mst):
+
+
+    lastidx = 0
+    for i, c in enumerate(name):
+        if c == '/':
+            lastidx = i
+    name = name[lastidx+1:]
+
     verts = len(adj)
     g = graphviz.Graph(name, engine='neato')
     g.attr('node', {'shape': 'point'})
@@ -73,4 +81,6 @@ def output_image(name, adj, mst):
             if verts < 50:
                 label = str(adj[a][b])
             g.edge(str(a), str(b), label, attr)
-    print(f'Rendered graph {name}, see {g.render()}')
+
+    dir = 'images'
+    print(f'Rendered graph {name}, see {g.render(directory=dir)}')

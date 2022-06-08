@@ -4,7 +4,8 @@ from pyomo.environ import *
 from itertools import chain, combinations
 
 """
-Solves the minimum spanning tree problem using integer linear programming.
+Solves the minimum spanning tree problem using integer linear programming
+(or gives up if it takes too much time -- more than time_limit seconds, if time_limit > 0).
 Expects the graph (adj) to be represented as a float[][].
 Returns {
     mst: bool[][] (adjacency matrix representation of the minimum spanning tree)
@@ -12,7 +13,7 @@ Returns {
     weight: total weight of the minimum spanning tree (sum of the weight of each edge in the tree)
 }
 """
-def int_prog(adj):
+def int_prog(adj, time_limit):
     v = len(adj)
 
     model = ConcreteModel()
@@ -44,10 +45,12 @@ def int_prog(adj):
     vs = list(range(v))
     subsets = chain.from_iterable(combinations(vs, r) for r in range(1, len(vs)))
     for s in subsets:
-        model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i <= j) <= len(s) - 1)
+        model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i >= j) <= len(s) - 1)
 
-    opt = SolverFactory('glpk')
-    opt.solve(model)
+    solver = SolverFactory('glpk')
+    if (time_limit > 0):
+        solver.options['tmlim'] = str(time_limit)
+    solver.solve(model)
 
     edges = []
     mst = square_matrix(v, False)
@@ -68,9 +71,16 @@ def int_prog(adj):
 print('Parsing instance...')
 adj = parse_instance(sys.argv[1])
 
-print('Finding MST by solving an integer linear programming model...')
-result = int_prog(adj)
+time_limit = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 
-print('edges', result['edges'], 'weight', result['weight'])
-print('Outputting image...')
-output_image(sys.argv[1], adj, result['mst'])
+print('time_limit', time_limit)
+
+print('Finding MST by solving an integer linear programming model...')
+result = int_prog(adj, time_limit)
+
+print('edges', result['edges'])
+print('weight', result['weight'])
+
+if '--visual' in sys.argv:
+    print('Outputting image...')
+    output_image(sys.argv[1], adj, result['mst'])

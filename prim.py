@@ -59,6 +59,9 @@ adj = parse_instance(sys.argv[1])
 print('Finding MST by Prim\'s algorithm...')
 result = lazy_prim(adj)
 
-print('edges', result['edges'], 'weight', result['weight'])
-print('Outputting image...')
-output_image(sys.argv[1], adj, result['mst'])
+print('edges', result['edges'])
+print('weight', result['weight'])
+
+if '--visual' in sys.argv:
+    print('Outputting image...')
+    output_image(sys.argv[1], adj, result['mst'])
