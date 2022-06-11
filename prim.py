@@ -1,6 +1,7 @@
 from common import *
 from heapq import heappop, heappush
 import sys
+from time import time
 
 """
 Solves the minimum spanning tree problem with a lazy implementaton of Prim's
@@ -31,6 +32,8 @@ def lazy_prim(adj):
                 continue
             heappush(pq, (adj[a][b], a, b))
 
+    start_time = time()
+
     visit(0)
     while pq:
         (w, a, b) = heappop(pq)
@@ -47,20 +50,25 @@ def lazy_prim(adj):
         if not marked[b]:
             visit(b)
 
+    end_time = time()
+
     return { \
         'mst': mst, \
         'edges': edges, \
-        'weight': weight \
+        'weight': weight, \
+        'elapsed': end_time - start_time \
     }
 
 print('Parsing instance...')
-adj = parse_instance(sys.argv[1])
+with open(sys.argv[1], 'r') as fp:
+    adj = parse_instance(fp)
 
 print('Finding MST by Prim\'s algorithm...')
 result = lazy_prim(adj)
 
 print('edges', result['edges'])
 print('weight', result['weight'])
+print('elapsed', result['elapsed'])
 
 if '--visual' in sys.argv:
     print('Outputting image...')

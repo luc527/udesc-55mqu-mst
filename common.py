@@ -28,9 +28,8 @@ represented as an adjacency matrix adj, where adj[i][j] is the weight of the
 edge from i to j (equal to adj[j][i]), or M (global) if there's no edge connecting
 i and j.
 """
-def parse_instance(filename):
-    with open(filename, 'r') as fp:
-        lines = fp.readlines()
+def parse_instance(fp):
+    lines = fp.readlines()
 
     lines = filter(lambda l: l[0] != '#', lines)  #remove comments
     lines = map(lambda l: l[:-1], lines)  #remove '\n'
@@ -55,9 +54,7 @@ The graph (adj) is expected to be a float[][], and the minimum spanning
 tree (mst) a boolean[][].
 """
 def output_image(name, adj, mst):
-
-
-    lastidx = 0
+    lastidx = -1
     for i, c in enumerate(name):
         if c == '/':
             lastidx = i
@@ -74,7 +71,7 @@ def output_image(name, adj, mst):
             if adj[a][b] == M:
                 continue
             attr = {'weight': str( int(1000 - 1000*adj[a][b]) )}
-            if mst[a][b]:
+            if mst is not None and mst[a][b]:
                 attr['color'] = 'red'
                 attr['penwidth'] = '3'
             label = ''

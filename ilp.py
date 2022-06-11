@@ -2,6 +2,7 @@ from common import *
 import sys
 from pyomo.environ import *
 from itertools import chain, combinations
+from time import time
 
 """
 Solves the minimum spanning tree problem using integer linear programming
@@ -11,9 +12,10 @@ Returns {
     mst: bool[][] (adjacency matrix representation of the minimum spanning tree)
     edges: (weight, a, b)[] (adjacency list representation of the minimum spanning tree)
     weight: total weight of the minimum spanning tree (sum of the weight of each edge in the tree)
+    elapsed: Time it took for the solver to solve the model
 }
 """
-def int_prog(adj, time_limit):
+def int_prog(adj):
     v = len(adj)
 
     model = ConcreteModel()
@@ -42,10 +44,12 @@ def int_prog(adj, time_limit):
     for s in subsets:
         model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i <= j) <= len(s) - 1)
 
+    start_time = time()
+
     solver = SolverFactory('glpk')
-    if (time_limit > 0):
-        solver.options['tmlim'] = str(time_limit)
     solver.solve(model)
+
+    end_time = time()
 
     edges = []
     mst = square_matrix(v, False)
@@ -60,21 +64,20 @@ def int_prog(adj, time_limit):
     return { \
         'mst': mst, \
         'edges': edges, \
-        'weight': weight \
+        'weight': weight, \
+        'elapsed': end_time - start_time \
     }
 
 print('Parsing instance...')
-adj = parse_instance(sys.argv[1])
-
-time_limit = int(sys.argv[2]) if len(sys.argv) > 2 else 0
-
-print('time_limit', time_limit)
+with open(sys.argv[1], 'r') as fp:
+    adj = parse_instance(fp)
 
 print('Finding MST by solving an integer linear programming model...')
-result = int_prog(adj, time_limit)
+result = int_prog(adj)
 
 print('edges', result['edges'])
 print('weight', result['weight'])
+print('elapsed', result['elapsed'])
 
 if '--visual' in sys.argv:
     print('Outputting image...')
