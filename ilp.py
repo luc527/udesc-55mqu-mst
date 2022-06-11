@@ -24,20 +24,15 @@ def int_prog(adj, time_limit):
     # Objective: minimize tree weight
     model.obj = Objective( \
         sense=minimize, \
-        expr=sum(adj[i][j] * model.x[i,j] for i in range(v) for j in range(i+1, v)) \
+        expr=sum(adj[i][j] * model.x[i,j] for i in range(v) for j in range(i, v)) \
     )
 
     model.con = ConstraintList()
 
-    # The tree subgraph needs to be undirected
-    for i in range(v):
-        for j in range(i+1, v):
-            model.con.add(expr=model.x[i,j] == model.x[j,i])
-
     # Has to be a spanning tree
 
     # - Has exactly v-1 edges
-    model.con.add(expr=sum(model.x[i,j] for i in range(v) for j in range(i+1, v)) == v - 1)
+    model.con.add(expr=sum(model.x[i,j] for i in range(v) for j in range(i, v)) == v - 1)
 
     # - Has no cycles
     # Or, equivalently, every subset S of vertices has no more than |S|-1 edges in it
@@ -45,7 +40,7 @@ def int_prog(adj, time_limit):
     vs = list(range(v))
     subsets = chain.from_iterable(combinations(vs, r) for r in range(1, len(vs)))
     for s in subsets:
-        model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i >= j) <= len(s) - 1)
+        model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i <= j) <= len(s) - 1)
 
     solver = SolverFactory('glpk')
     if (time_limit > 0):
@@ -54,8 +49,8 @@ def int_prog(adj, time_limit):
 
     edges = []
     mst = square_matrix(v, False)
-    for j in range(v):
-        for i in range(j):
+    for i in range(v):
+        for j in range(i, v):
             if model.x[i,j]() == 1:
                 edges.append((adj[i][j], i, j))
                 mst[i][j] = True

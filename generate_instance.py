@@ -10,4 +10,5 @@ print(e)
 for i in range(e):
     a = random.randrange(0, v)
     b = random.randrange(0, v)
-    print(f'{a} {b}')
+    w = random.random()
+    print(f'{a} {b} {w:.3f}')
