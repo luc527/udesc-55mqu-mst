@@ -51,7 +51,7 @@ def parse_instance(fp):
 Outputs a graph along with its minimum spanning tree as an image.
 The image will be named f'{name}.gv.pdf'.
 The graph (adj) is expected to be a float[][], and the minimum spanning
-tree (mst) a boolean[][].
+tree (mst) a boolean[][] (or None if you don't have a MST).
 """
 def output_image(name, adj, mst):
     lastidx = -1

@@ -44,12 +44,9 @@ def int_prog(adj):
     for s in subsets:
         model.con.add(expr=sum(model.x[i,j] for i in s for j in s if i <= j) <= len(s) - 1)
 
-    start_time = time()
-
     solver = SolverFactory('glpk')
-    solver.solve(model)
-
-    end_time = time()
+    results = solver.solve(model)
+    elapsed = results.solver._list[0]['Time']  # couldn't find the documentation for this
 
     edges = []
     mst = square_matrix(v, False)
@@ -65,7 +62,7 @@ def int_prog(adj):
         'mst': mst, \
         'edges': edges, \
         'weight': weight, \
-        'elapsed': end_time - start_time \
+        'elapsed': elapsed \
     }
 
 print('Parsing instance...')
