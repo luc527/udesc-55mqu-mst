@@ -34,6 +34,10 @@ python3 prim.py instances/1000EWG.txt
 
 Em ambos os casos o argumento `--visual` pode ser adicionado no final para gerar uma imagem do grafo com sua árvore geradora mínima em destaque eu será salva na pasta `images`
 
+Instâncias podem ser geradas com o script `generate_instance.py`. Tentei fazer com que ele gerasse sempre grafos conexos, mas não deu certo
+
+Com o `draw_instance.py` é possível gerar uma imagem da instância dada no `stdin`
+
 ## Referências
 
 O modelo de programação linear inteira foi feito com base em http://www.columbia.edu/~cs2035/courses/ieor6614.S16/mst-lp.pdf
