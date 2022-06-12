@@ -32,7 +32,7 @@ Resolver uma instância, por exemplo 1000EWG.txt, com o algoritmo de Prim
 python3 prim.py instances/1000EWG.txt
 ```
 
-Em ambos os casos o argumento `--visual` pode ser adicionado no final para gerar uma imagem do grafo com sua árvore geradora mínima em destaque eu será salva na pasta `images`
+Em ambos os casos o argumento `--visual` pode ser adicionado no final para gerar uma imagem do grafo com sua árvore geradora mínima em destaque que será salva na pasta `images`
 
 Instâncias podem ser geradas com o script `generate_instance.py`. Tentei fazer com que ele gerasse sempre grafos conexos, mas não deu certo
 
