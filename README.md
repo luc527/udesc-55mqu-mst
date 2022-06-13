@@ -1,3 +1,5 @@
+# Utilizando programação inteira para encontrar árvores geradoras mínimas 
+
 Trabalho de programação inteira para a disciplina de Métodos Quantitativos da UDESC (Bacharelado em Engenharia de Software, CEAVI)
 
 Lucas Moraes Schwambach
@@ -9,15 +11,19 @@ Mateus Lucas Cruz Brandt
 É necessário ter o `glpk` instalando e disponível no path
 
 No Ubuntu, basta fazer o seguinte
-
 ```bash
-sudo apt-get install glpk-utils
+sudo apt install glpk-utils
 ```
 
 Então, é necessário instalar as dependências de bibliotecas em Python do projeto:
-
 ```bash
 pip install -r requirements.txt
+```
+
+Também é necessário ter o `graphiz` instalado e disponível no path. Ele é utilizado para gerar a representação visual da solução
+No Ubuntu basta executar o seguinte comando:
+```bash
+sudo apt install graphviz
 ```
 
 ## Uso
